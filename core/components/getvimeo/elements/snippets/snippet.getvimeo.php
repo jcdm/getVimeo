@@ -46,7 +46,12 @@ if (!empty($channel)) {
   $page = 1;
 
   do {
-     $pagedata = unserialize(file_get_contents("http://vimeo.com/api/v2/channel/$channel/videos.php?page=$page"))
+    $apiContext = stream_context_create(array( 
+        'http' => array( 
+            'timeout' => 10
+        ) 
+    ));
+     $pagedata = unserialize(file_get_contents("http://vimeo.com/api/v2/channel/$channel/videos.php?page=$page",0,$apiContext))
      or $modx->log(modX::LOG_LEVEL_ERROR, 'getVimeo() - Unable to find Channel: ' . $channel);
      $url = array_merge($url,$pagedata);
      $page++;
